@@ -4,6 +4,8 @@ import { useI18n } from "@excalidraw/excalidraw/i18n";
 import { WelcomeScreen } from "@excalidraw/excalidraw/index";
 import React from "react";
 
+import hycoderLogo from "../assets/logo1.png";
+
 import { isExcalidrawPlusSignedUser } from "../app_constants";
 
 export const AppWelcomeScreen: React.FC<{
@@ -44,7 +46,11 @@ export const AppWelcomeScreen: React.FC<{
       <WelcomeScreen.Hints.ToolbarHint />
       <WelcomeScreen.Hints.HelpHint />
       <WelcomeScreen.Center>
-        <WelcomeScreen.Center.Logo />
+        {/* <WelcomeScreen.Center.Logo /> */}
+        <div>
+          {/* <WelcomeScreen.Center.Logo /> */}
+          <img src={hycoderLogo} alt="hycoder logo" />
+        </div>
         <WelcomeScreen.Center.Heading>
           {headingContent}
         </WelcomeScreen.Center.Heading>

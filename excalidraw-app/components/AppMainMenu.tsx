@@ -1,19 +1,19 @@
-import {
-  loginIcon,
-  ExcalLogo,
-  eyeIcon,
-} from "@excalidraw/excalidraw/components/icons";
+// import {
+//   loginIcon,
+//   ExcalLogo,
+//   eyeIcon,
+// } from "@excalidraw/excalidraw/components/icons";
 import { MainMenu } from "@excalidraw/excalidraw/index";
 import React from "react";
 
-import { isDevEnv } from "@excalidraw/common";
+// import { isDevEnv } from "@excalidraw/common";
 
 import type { Theme } from "@excalidraw/element/types";
 
-import { LanguageList } from "../app-language/LanguageList";
-import { isExcalidrawPlusSignedUser } from "../app_constants";
+// import { LanguageList } from "../app-language/LanguageList";
+// import { isExcalidrawPlusSignedUser } from "../app_constants";
 
-import { saveDebugState } from "./DebugCanvas";
+// import { saveDebugState } from "./DebugCanvas";
 
 export const AppMainMenu: React.FC<{
   onCollabDialogOpen: () => any;
@@ -39,7 +39,7 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.SearchMenu />
       <MainMenu.DefaultItems.Help />
       <MainMenu.DefaultItems.ClearCanvas />
-      <MainMenu.Separator />
+      {/* <MainMenu.Separator />
       <MainMenu.ItemLink
         icon={ExcalLogo}
         href={`${
@@ -85,7 +85,7 @@ export const AppMainMenu: React.FC<{
       <MainMenu.ItemCustom>
         <LanguageList style={{ width: "100%" }} />
       </MainMenu.ItemCustom>
-      <MainMenu.DefaultItems.ChangeCanvasBackground />
+      <MainMenu.DefaultItems.ChangeCanvasBackground /> */}
     </MainMenu>
   );
 });

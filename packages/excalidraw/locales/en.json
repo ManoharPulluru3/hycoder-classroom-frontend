@@ -581,7 +581,7 @@
         "description": "Export the scene data to a file from which you can import later."
       },
       "excalidrawPlus": {
-        "title": "Excalidraw+",
+        "title": "Excalidraw+c",
         "button": "Export to Excalidraw+",
         "description": "Save the scene to your Excalidraw+ workspace."
       }
