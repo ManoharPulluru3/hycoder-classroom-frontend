@@ -1,12 +1,10 @@
-import { loginIcon } from "@excalidraw/excalidraw/components/icons";
-import { POINTER_EVENTS } from "@excalidraw/common";
-import { useI18n } from "@excalidraw/excalidraw/i18n";
-import { WelcomeScreen } from "@excalidraw/excalidraw/index";
 import React from "react";
-
-import hycoderLogo from "../assets/logo1.png";
+import { WelcomeScreen } from "@excalidraw/excalidraw/index";
+import { useI18n } from "@excalidraw/excalidraw/i18n";
+import { POINTER_EVENTS } from "@excalidraw/common";
 
 import { isExcalidrawPlusSignedUser } from "../app_constants";
+import hycoderLogo from "../assets/logo1.png";
 
 export const AppWelcomeScreen: React.FC<{
   onCollabDialogOpen: () => any;
@@ -46,10 +44,17 @@ export const AppWelcomeScreen: React.FC<{
       <WelcomeScreen.Hints.ToolbarHint />
       <WelcomeScreen.Hints.HelpHint />
       <WelcomeScreen.Center>
-        {/* <WelcomeScreen.Center.Logo /> */}
         <div>
-          {/* <WelcomeScreen.Center.Logo /> */}
-          <img src={hycoderLogo} alt="hycoder logo" />
+          <img
+            src={hycoderLogo}
+            alt="hycoder logo"
+            style={{
+              maxWidth: "100%", // Ensure logo doesn't overflow container
+              maxHeight: "20vh", // Limit height to 20% of viewport height
+              width: "auto", // Maintain aspect ratio
+              height: "auto", // Maintain aspect ratio
+            }}
+          />
         </div>
         <WelcomeScreen.Center.Heading>
           {headingContent}
@@ -61,17 +66,6 @@ export const AppWelcomeScreen: React.FC<{
             <WelcomeScreen.Center.MenuItemLiveCollaborationTrigger
               onSelect={() => props.onCollabDialogOpen()}
             />
-          )}
-          {!isExcalidrawPlusSignedUser && (
-            <WelcomeScreen.Center.MenuItemLink
-              href={`${
-                import.meta.env.VITE_APP_PLUS_LP
-              }/plus?utm_source=excalidraw&utm_medium=app&utm_content=welcomeScreenGuest`}
-              shortcut={null}
-              icon={loginIcon}
-            >
-              Sign up
-            </WelcomeScreen.Center.MenuItemLink>
           )}
         </WelcomeScreen.Center.Menu>
       </WelcomeScreen.Center>

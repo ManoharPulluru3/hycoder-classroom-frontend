@@ -115,3 +115,12 @@
     }
   }
 }
+
+
+#root > div > div > div.layer-ui__wrapper > div.FixedSideContainer.FixedSideContainer_side_top > div > div.layer-ui__wrapper__top-right.zen-mode-transition > label > div {
+  display: none;
+}
+
+#root > div > div > div.layer-ui__wrapper > footer > div.footer-center.zen-mode-transition > div {
+  display: none !important;
+}

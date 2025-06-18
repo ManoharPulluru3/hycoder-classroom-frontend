@@ -1,0 +1,82 @@
+```Step-by-Step DNS Configuration Process for Multiple Domain Providers
+Here's a detailed walkthrough for configuring DNS records for your domains across different providers:
+
+For GoDaddy Domains (namastemississauga.com)
+Login to GoDaddy
+
+Go to godaddy.com
+Click "Sign In" and enter your credentials
+Access Domain Management
+
+After logging in, go to "My Products"
+Find and select the domain namastemississauga.com
+Navigate to DNS Settings
+
+Look for "DNS" or "Manage DNS" option
+Click on it to access the DNS management interface
+Add A Record for Root Domain
+
+Find the "Records" or "DNS Records" section
+Click "Add" or "Add Record"
+Select record type: A
+For "Host" or "Name": enter @ (or sometimes left blank)
+For "Points to" or "Value": enter 20.81.242.18
+TTL: Select 1 hour (or 3600 seconds)
+Save the record
+Add CNAME Record for WWW
+
+Click "Add" or "Add Record" again
+Select record type: CNAME
+For "Host" or "Name": enter www
+For "Points to" or "Value": enter namastemississauga.com
+TTL: Select 1 hour (or 3600 seconds)
+Save the record
+For Your Other Domain Provider (namastemississauga.ca)
+Login to the Domain Registrar
+
+Go to your registrar's website where namastemississauga.ca is registered
+Sign in with your credentials
+Find Domain Management
+
+Navigate to domain management section
+Select namastemississauga.ca from your domains list
+Access DNS Settings
+
+Look for "DNS Management", "DNS Settings", or "Zone Editor"
+This might be under "Advanced Settings" in some providers
+Add A Record for Root Domain
+
+Find "Add Record" or "Create Record" button
+Select A record type
+Host/Name: @ or leave blank (represents root domain)
+Value/Points to: 20.81.242.18
+TTL: 3600 seconds (1 hour)
+Save changes
+Add CNAME Record for WWW
+
+Click "Add Record" again
+Select CNAME record type
+Host/Name: www
+Value/Points to: namastemississauga.ca
+TTL: 3600 seconds (1 hour)
+Save changes
+After Configuration
+Verify Records
+
+Most providers show a summary of DNS records
+Confirm both the A record and CNAME record appear correctly
+Wait for Propagation
+
+DNS changes typically take 15 minutes to 48 hours to fully propagate
+You can check propagation using tools like dnschecker.org
+Test the Domains
+
+After propagation, verify that both domains resolve to your server by pinging them:
+The response should show your server IP (20.81.242.18)
+Run Certbot for SSL
+
+Once DNS is properly configured, run:
+Verify HTTPS Access
+
+Visit all domains using https:// to confirm SSL is working properly
+This process ensures your domains will point to your server and that SSL certificates will be correctly issued for secure connections.```
