@@ -498,7 +498,7 @@ body.excalidraw-cursor-resize * {
       display: none;
     }
     .scroll-back-to-content {
-      bottom: calc(80px + var(--sab, 0));
+      bottom: 130px;
       z-index: -1;
     }
   }

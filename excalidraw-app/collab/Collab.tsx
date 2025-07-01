@@ -348,54 +348,69 @@ class Collab extends PureComponent<CollabProps, CollabState> {
       console.error(error);
     }
   };
+stopCollaboration = (keepRemoteState = true, skipConfirm = false) => {
+  this.queueBroadcastAllElements.cancel();
+  this.queueSaveToFirebase.cancel();
+  this.loadImageFiles.cancel();
+  this.resetErrorIndicator(true);
 
-  stopCollaboration = (keepRemoteState = true) => {
-    this.queueBroadcastAllElements.cancel();
-    this.queueSaveToFirebase.cancel();
-    this.loadImageFiles.cancel();
-    this.resetErrorIndicator(true);
+  this.saveCollabRoomToFirebase(
+    getSyncableElements(
+      this.excalidrawAPI.getSceneElementsIncludingDeleted(),
+    ),
+  );
 
-    this.saveCollabRoomToFirebase(
-      getSyncableElements(
-        this.excalidrawAPI.getSceneElementsIncludingDeleted(),
-      ),
+  if (this.portal.socket && this.fallbackInitializationHandler) {
+    this.portal.socket.off(
+      "connect_error",
+      this.fallbackInitializationHandler,
     );
+  }
 
-    if (this.portal.socket && this.fallbackInitializationHandler) {
-      this.portal.socket.off(
-        "connect_error",
-        this.fallbackInitializationHandler,
-      );
-    }
+  if (!keepRemoteState) {
+    LocalData.fileStorage.reset();
+    this.destroySocketClient();
+  } else if (!skipConfirm && window.confirm(t("alerts.collabStopOverridePrompt"))) {
+    resetBrowserStateVersions();
+    window.history.pushState({}, APP_NAME, window.location.origin);
+    this.destroySocketClient();
+    LocalData.fileStorage.reset();
 
-    if (!keepRemoteState) {
-      LocalData.fileStorage.reset();
-      this.destroySocketClient();
-    } else if (window.confirm(t("alerts.collabStopOverridePrompt"))) {
-      // hack to ensure that we prefer we disregard any new browser state
-      // that could have been saved in other tabs while we were collaborating
-      resetBrowserStateVersions();
-
-      window.history.pushState({}, APP_NAME, window.location.origin);
-      this.destroySocketClient();
-
-      LocalData.fileStorage.reset();
-
-      const elements = this.excalidrawAPI
-        .getSceneElementsIncludingDeleted()
-        .map((element) => {
-          if (isImageElement(element) && element.status === "saved") {
-            return newElementWith(element, { status: "pending" });
-          }
-          return element;
-        });
-
-      this.excalidrawAPI.updateScene({
-        elements,
-        captureUpdate: CaptureUpdateAction.NEVER,
+    const elements = this.excalidrawAPI
+      .getSceneElementsIncludingDeleted()
+      .map((element) => {
+        if (isImageElement(element) && element.status === "saved") {
+          return newElementWith(element, { status: "pending" });
+        }
+        return element;
       });
-    }
-  };
+
+    this.excalidrawAPI.updateScene({
+      elements,
+      captureUpdate: CaptureUpdateAction.NEVER,
+    });
+  } else if (skipConfirm) {
+    // Handle exit without confirmation when skipConfirm is true
+    resetBrowserStateVersions();
+    window.history.pushState({}, APP_NAME, window.location.origin);
+    this.destroySocketClient();
+    LocalData.fileStorage.reset();
+
+    const elements = this.excalidrawAPI
+      .getSceneElementsIncludingDeleted()
+      .map((element) => {
+        if (isImageElement(element) && element.status === "saved") {
+          return newElementWith(element, { status: "pending" });
+        }
+        return element;
+      });
+
+    this.excalidrawAPI.updateScene({
+      elements,
+      captureUpdate: CaptureUpdateAction.NEVER,
+    });
+  }
+};
 
   private destroySocketClient = (opts?: { isUnload: boolean }) => {
     this.lastBroadcastedOrReceivedSceneVersion = -1;

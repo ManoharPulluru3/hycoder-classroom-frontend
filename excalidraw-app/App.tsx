@@ -36,7 +36,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { loadFromBlob } from "@excalidraw/excalidraw/data/blob";
 import { useCallbackRefState } from "@excalidraw/excalidraw/hooks/useCallbackRefState";
 import { t } from "@excalidraw/excalidraw/i18n";
-
 import {
   GithubIcon,
   XBrandIcon,
@@ -56,7 +55,6 @@ import {
   parseLibraryTokensFromUrl,
   useHandleLibrary,
 } from "@excalidraw/excalidraw/data/library";
-
 import type { RemoteExcalidrawElement } from "@excalidraw/excalidraw/data/reconcile";
 import type { RestoredDataState } from "@excalidraw/excalidraw/data/restore";
 import type {
@@ -73,7 +71,6 @@ import type {
 } from "@excalidraw/excalidraw/types";
 import type { ResolutionType } from "@excalidraw/common/utility-types";
 import type { ResolvablePromise } from "@excalidraw/common/utils";
-
 import CustomStats from "./CustomStats";
 import {
   Provider,
@@ -98,20 +95,17 @@ import { AppMainMenu } from "./components/AppMainMenu";
 import { AppWelcomeScreen } from "./components/AppWelcomeScreen";
 import { exportToExcalidrawPlus } from "./components/ExportToExcalidrawPlus";
 import { TopErrorBoundary } from "./components/TopErrorBoundary";
-
 import {
   exportToBackend,
   getCollaborationLinkData,
   isCollaborationLink,
   loadScene,
 } from "./data";
-
-import { updateStaleImageStatuses } from "./data/FileManager";
+import { updateStaleImageStatuses as updateStaleImageStatuses } from "./data/FileManager";
 import {
   importFromLocalStorage,
   importUsernameFromLocalStorage,
 } from "./data/localStorage";
-
 import { loadFilesFromFirebase } from "./data/firebase";
 import {
   LibraryIndexedDBAdapter,
@@ -131,9 +125,9 @@ import DebugCanvas, {
 } from "./components/DebugCanvas";
 import { AIComponents } from "./components/AI";
 import { ExcalidrawPlusIframeExport } from "./ExcalidrawPlusIframeExport";
-
+import { RoomJoinComponent } from "./components/RoomJoinComponent";
 import "./index.scss";
-
+import "./RoomJoinComponent.scss";
 import type { CollabAPI } from "./collab/Collab";
 
 polyfill();
@@ -144,12 +138,10 @@ declare global {
   interface BeforeInstallPromptEventChoiceResult {
     outcome: "accepted" | "dismissed";
   }
-
   interface BeforeInstallPromptEvent extends Event {
     prompt(): Promise<void>;
     userChoice: Promise<BeforeInstallPromptEventChoiceResult>;
   }
-
   interface WindowEventMap {
     beforeinstallprompt: BeforeInstallPromptEvent;
   }
@@ -821,7 +813,12 @@ const ExcalidrawWrapper = () => {
             return null;
           }
           return (
-            <div className="top-right-ui">
+            <div
+              style={{
+                display: window.innerWidth >= 768 ? "block" : "none",
+              }}
+              className="top-right-ui"
+            >
               {collabError.message && <CollabError collabError={collabError} />}
               <LiveCollaborationTrigger
                 isCollaborating={isCollaborating}
@@ -851,6 +848,44 @@ const ExcalidrawWrapper = () => {
           onCollabDialogOpen={onCollabDialogOpen}
           isCollabEnabled={!isCollabDisabled}
         />
+        {collabAPI && !isCollabDisabled && (
+          <div
+            style={{
+              position: "absolute",
+              top: "70px", // Adjust based on your toolbar height
+              left: "12px",
+              zIndex: 10,
+              display: window.innerWidth <= 768 ? "block" : "none",
+            }}
+            className="mobile-share-button"
+          >
+            <LiveCollaborationTrigger
+              isCollaborating={isCollaborating}
+              onSelect={() =>
+                setShareDialogState({ isOpen: true, type: "share" })
+              }
+            />
+          </div>
+        )}
+        {collabAPI && !isCollabDisabled && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: "12px",
+              right: "12px",
+              zIndex: 10,
+            }}
+            className="bottom-right-ui"
+          >
+            <RoomJoinComponent
+              collabAPI={collabAPI}
+              excalidrawAPI={excalidrawAPI}
+              isCollaborating={isCollaborating}
+              isMobile={window.innerWidth <= 768}
+              onError={setErrorMessage}
+            />
+          </div>
+        )}
         <OverwriteConfirmDialog>
           <OverwriteConfirmDialog.Actions.ExportToImage />
           <OverwriteConfirmDialog.Actions.SaveToDisk />
@@ -873,7 +908,6 @@ const ExcalidrawWrapper = () => {
         </OverwriteConfirmDialog>
         <AppFooter onChange={() => excalidrawAPI?.refresh()} />
         {excalidrawAPI && <AIComponents excalidrawAPI={excalidrawAPI} />}
-
         <TTDDialogTrigger />
         {isCollaborating && isOffline && (
           <div className="collab-offline-warning">
@@ -890,7 +924,6 @@ const ExcalidrawWrapper = () => {
         {excalidrawAPI && !isCollabDisabled && (
           <Collab excalidrawAPI={excalidrawAPI} />
         )}
-
         <ShareDialog
           collabAPI={collabAPI}
           onExportToBackend={async () => {
@@ -907,13 +940,11 @@ const ExcalidrawWrapper = () => {
             }
           }}
         />
-
         {errorMessage && (
           <ErrorDialog onClose={() => setErrorMessage("")}>
             {errorMessage}
           </ErrorDialog>
         )}
-
         <CommandPalette
           customCommandPaletteItems={[
             {
@@ -1060,7 +1091,6 @@ const ExcalidrawWrapper = () => {
                   },
                 ]
               : [ExcalidrawPlusCommand, ExcalidrawPlusAppCommand]),
-
             {
               label: t("overwriteConfirm.action.excalidrawPlus.button"),
               category: DEFAULT_CATEGORIES.export,
